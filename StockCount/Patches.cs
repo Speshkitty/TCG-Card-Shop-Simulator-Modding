@@ -23,7 +23,7 @@ namespace StockCount
 
                 if (StockAmounts.TryGetValue(restockData.itemType, out var amount))
                 {
-                    __instance.m_AmountText.text = $"Stock{Environment.NewLine}{amount}";
+                    __instance.m_AmountText.text = $"Stock: {amount}";
                 }
                 else
                 {
