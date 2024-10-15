@@ -48,6 +48,8 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+	  <Private>False</Private>
+	  <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
 </Project>
