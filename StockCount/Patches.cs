@@ -167,10 +167,16 @@ namespace StockCount
                 foreach (var box in boxes)
                 {
                     if (box.GetItemType() == EItemType.None) { continue; }
-                    if (!StockAmounts.TryAdd(box.GetItemType(), new StockData(0, box.m_ItemCompartment.GetItemCount(), 1)))
+                   
+                    bool boxIsEmpty = box.m_ItemCompartment.GetItemCount() == 0;
+                    
+                    if (!StockAmounts.TryAdd(box.GetItemType(), new StockData(0, box.m_ItemCompartment.GetItemCount(), boxIsEmpty ? 0 : 1)))
                     {
                         StockAmounts[box.GetItemType()].ItemsInBoxes += box.m_ItemCompartment.GetItemCount();
-                        StockAmounts[box.GetItemType()].AmountOfBoxes += 1;
+                        if (!boxIsEmpty)
+                        {
+                            StockAmounts[box.GetItemType()].AmountOfBoxes += 1;
+                        }
                     }
                 }
 #if DEBUG
