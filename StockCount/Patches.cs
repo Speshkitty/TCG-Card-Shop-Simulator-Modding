@@ -83,7 +83,6 @@ namespace StockCount
             try
             {
                 RestockData restockData = InventoryBase.GetRestockData(index);
-                
                 //only update text if the license has been bought
                 if (restockData != null && __instance.m_UIGrp.activeSelf) { 
                     if (StockAmounts.TryGetValue(restockData.itemType, out var stockData))
@@ -153,8 +152,12 @@ namespace StockCount
             if (boxes.Length == 0)
             {
                 Plugin.Log("No boxes found");
-                return;
-            }
+                if(!Plugin.showAmountInShelves.Value)
+                {
+                    // only skip the rest if we don't need to show the amount in shelves
+                    return;
+                }
+            } else { }
             StringBuilder sb = new();
             try
             {
@@ -164,10 +167,16 @@ namespace StockCount
                 foreach (var box in boxes)
                 {
                     if (box.GetItemType() == EItemType.None) { continue; }
-                    if (!StockAmounts.TryAdd(box.GetItemType(), new StockData(0, box.m_ItemCompartment.GetItemCount(), 1)))
+                   
+                    bool boxIsEmpty = box.m_ItemCompartment.GetItemCount() == 0;
+                    
+                    if (!StockAmounts.TryAdd(box.GetItemType(), new StockData(0, box.m_ItemCompartment.GetItemCount(), boxIsEmpty ? 0 : 1)))
                     {
                         StockAmounts[box.GetItemType()].ItemsInBoxes += box.m_ItemCompartment.GetItemCount();
-                        StockAmounts[box.GetItemType()].AmountOfBoxes += 1;
+                        if (!boxIsEmpty)
+                        {
+                            StockAmounts[box.GetItemType()].AmountOfBoxes += 1;
+                        }
                     }
                 }
 #if DEBUG
